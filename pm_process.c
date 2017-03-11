@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#define _LARGEFILE64_SOURCE
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -163,7 +164,10 @@ int pm_process_workingset(pm_process_t *proc,
         fd = open(filename, O_WRONLY);
         if (fd < 0)
             return errno;
-        write(fd, "1\n", strlen("1\n"));
+        error = write(fd, "1\n", strlen("1\n"));
+        if (error == -1) {
+            fprintf(stderr, "write %s error\n", filename);
+        }
         close(fd);
     }
     return 0;

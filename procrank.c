@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#define _GNU_SOURCE
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -383,7 +384,7 @@ exit:
          * to give the user "<unknown>" here, but otherwise they get to look
          * at a blank.
          */
-        if (strncpy(buf, unknown_cmdline, (size_t)len) >= (size_t)len) {
+        if (strncpy(buf, unknown_cmdline, (size_t)len) - buf >= (size_t)len) {
             rc = 4;
         }
     }
