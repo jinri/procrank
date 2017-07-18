@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef _LIBS_PAGEMAP_PM_MAP_H
 #define _LIBS_PAGEMAP_PM_MAP_H
-#include "pagemap.h"
+
+#include <pagemap/pagemap.h>
+
 int pm_map_destroy(pm_map_t *map);
+
 #endif
