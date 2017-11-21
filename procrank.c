@@ -28,6 +28,7 @@
 #include <signal.h>
 
 #include <pagemap/pagemap.h>
+#include "strlcpy.h"
 
 struct proc_info {
     pid_t pid;
