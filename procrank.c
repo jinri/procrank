@@ -370,7 +370,7 @@ int main(int argc, char *argv[]) {
         printf("%5d  ", procs[i]->pid);
 
         if (ws) {
-            printf("%6zuK  %6zuK  %6zuK  ",
+            printf("%11zuK  %11zuK  %11zuK  ",
                 procs[i]->usage.rss / 1024,
                 procs[i]->usage.pss / 1024,
                 procs[i]->usage.uss / 1024
@@ -388,9 +388,9 @@ int main(int argc, char *argv[]) {
             pm_swapusage_t su;
 
             pm_memusage_pswap_get_usage(&procs[i]->usage, &su);
-            printf("%6zuK  ", procs[i]->usage.swap / 1024);
-            printf("%6zuK  ", su.proportional / 1024);
-            printf("%6zuK  ", su.unique / 1024);
+            printf("%11zuK  ", procs[i]->usage.swap / 1024);
+            printf("%11zuK  ", su.proportional / 1024);
+            printf("%11zuK  ", su.unique / 1024);
             total_pswap += su.proportional;
             total_uswap += su.unique;
             pm_memusage_pswap_free(&procs[i]->usage);
@@ -417,15 +417,15 @@ int main(int argc, char *argv[]) {
     printf("%5s  ", "");
 
     if (ws) {
-        printf("%7s  %7s  %7s  ", "", "------", "------");
+        printf("%12s  %12s  %12s  ", "", "------", "------");
     } else {
-        printf("%8s  %7s  %7s  %7s  ", "", "", "------", "------");
+        printf("%12s  %12s  %12s  %12s  ", "", "", "------", "------");
     }
 
     if (has_swap) {
-        printf("%7s  %7s  %7s  ", "------", "------", "------");
+        printf("%12s  %12s  %12s  ", "------", "------", "------");
         if (has_zram) {
-            printf("%7s  ", "------");
+            printf("%12s  ", "------");
         }
     }
 
@@ -434,19 +434,19 @@ int main(int argc, char *argv[]) {
     /* Print the total line */
     printf("%5s  ", "");
     if (ws) {
-        printf("%7s  %6" PRIu64 "K  %6" PRIu64 "K  ",
+        printf("%12s  %11" PRIu64 "K  %11" PRIu64 "K  ",
             "", total_pss / 1024, total_uss / 1024);
     } else {
-        printf("%8s  %7s  %6" PRIu64 "K  %6" PRIu64 "K  ",
+        printf("%12s  %12s  %11" PRIu64 "K  %11" PRIu64 "K  ",
             "", "", total_pss / 1024, total_uss / 1024);
     }
 
     if (has_swap) {
-        printf("%6" PRIu64 "K  ", total_swap / 1024);
-        printf("%6" PRIu64 "K  ", total_pswap / 1024);
-        printf("%6" PRIu64 "K  ", total_uswap / 1024);
+        printf("%11" PRIu64 "K  ", total_swap / 1024);
+        printf("%11" PRIu64 "K  ", total_pswap / 1024);
+        printf("%11" PRIu64 "K  ", total_uswap / 1024);
         if (has_zram) {
-            printf("%6" PRIu64 "K  ", total_zswap / 1024);
+            printf("%11" PRIu64 "K  ", total_zswap / 1024);
         }
     }
 
