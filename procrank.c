@@ -181,6 +181,7 @@ int main(int argc, char *argv[]) {
     pm_kernel_t *ker;
     pm_process_t *proc;
     pid_t *pids;
+    pid_t single_pid = 0;
     struct proc_info **procs;
     size_t num_procs;
     uint64_t total_pss;
@@ -224,6 +225,7 @@ int main(int argc, char *argv[]) {
         if (!strcmp(argv[arg], "-w")) { ws = WS_ONLY; continue; }
         if (!strcmp(argv[arg], "-W")) { ws = WS_RESET; continue; }
         if (!strcmp(argv[arg], "-R")) { order *= -1; continue; }
+        if (!strcmp(argv[arg], "-P")) { single_pid = atoi(argv[arg+1]); arg++; continue; }
         if (!strcmp(argv[arg], "-h")) { usage(argv[0]); exit(0); }
         fprintf(stderr, "Invalid argument \"%s\".\n", argv[arg]);
         usage(argv[0]);
@@ -240,10 +242,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    error = pm_kernel_pids(ker, &pids, &num_procs);
-    if (error) {
-        fprintf(stderr, "Error listing processes.\n");
-        exit(EXIT_FAILURE);
+    if (single_pid > 0) {
+        pids = (pid_t *)malloc(sizeof(pid_t));
+        pids[0] = single_pid;
+        num_procs = 1;
+    } else {
+        error = pm_kernel_pids(ker, &pids, &num_procs);
+        if (error) {
+            fprintf(stderr, "Error listing processes.\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
     procs = calloc(num_procs, sizeof(struct proc_info*));
@@ -319,19 +327,19 @@ int main(int argc, char *argv[]) {
 
     printf("%5s  ", "PID");
     if (ws) {
-        printf("%7s  %7s  %7s  ", "WRss", "WPss", "WUss");
+        printf("%12s  %12s  %12s  ", "WRss", "WPss", "WUss");
         if (has_swap) {
-            printf("%7s  %7s  %7s  ", "WSwap", "WPSwap", "WUSwap");
+            printf("%12s  %12s  %12s  ", "WSwap", "WPSwap", "WUSwap");
             if (has_zram) {
-                printf("%7s  ", "WZSwap");
+                printf("%12s  ", "WZSwap");
             }
         }
     } else {
-        printf("%8s  %7s  %7s  %7s  ", "Vss", "Rss", "Pss", "Uss");
+        printf("%12s  %12s  %12s  %12s  ", "Vss", "Rss", "Pss", "Uss");
         if (has_swap) {
-            printf("%7s  %7s  %7s  ", "Swap", "PSwap", "USwap");
+            printf("%12s  %12s  %12s  ", "Swap", "PSwap", "USwap");
             if (has_zram) {
-                printf("%7s  ", "ZSwap");
+                printf("%12s  ", "ZSwap");
             }
         }
     }
@@ -368,7 +376,7 @@ int main(int argc, char *argv[]) {
                 procs[i]->usage.uss / 1024
             );
         } else {
-            printf("%7zuK  %6zuK  %6zuK  %6zuK  ",
+            printf("%11zuK  %11zuK  %11zuK  %11zuK  ",
                 procs[i]->usage.vss / 1024,
                 procs[i]->usage.rss / 1024,
                 procs[i]->usage.pss / 1024,
@@ -400,6 +408,10 @@ int main(int argc, char *argv[]) {
 
     free(procs);
     pm_memusage_pswap_destroy(p_swap);
+
+    /* process a single process, no need to show total message */
+    if (single_pid > 0)
+        return 0;
 
     /* Print the separator line */
     printf("%5s  ", "");
