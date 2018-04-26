@@ -1,14 +1,17 @@
 # procrank
-C files and header files are copied from android 5.0, and Zheiwei Pi writes a very simple Makefile.
+C files and header files are copied from android 7.1, and Zheiwei Pi writes a very simple Makefile.
 
-#HOWTO
+# HOWTO
+```
 1,download code  
 2,cd procrank  
 3,make  
 4,sudo make install  
-5,procrank  
+5,procrank
+```
 
-#result like this
+# result like this
+```
   PID       Vss      Rss      Pss      Uss  cmdline  
  1421  1265100K   80512K   46842K   36624K  compiz  
  4426   772676K   61368K   29718K   23780K  /usr/bin/python  
@@ -32,3 +35,4 @@ C files and header files are copied from android 5.0, and Zheiwei Pi writes a ve
                           502745K  392752K  TOTAL  
 
 RAM: 4047052K total, 172652K free, 2227980K buffers, 907004K cached, 35340K shmem, 141284K slab  
+```
